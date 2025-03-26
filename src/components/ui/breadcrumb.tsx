@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { ChevronRight, MoreHorizontal } from "lucide-react"
+import { ChevronRight, MoreHorizontal, Home } from 'lucide-react';
+import Link from 'next/link';
 
 import { cn } from "@/lib/utils"
 
@@ -96,6 +97,45 @@ function BreadcrumbEllipsis({
       <span className="sr-only">More</span>
     </span>
   )
+}
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface BreadcrumbProps {
+  items: BreadcrumbItem[];
+  className?: string;
+}
+
+export function Breadcrumb({ items, className }: BreadcrumbProps) {
+  return (
+    <nav className={cn('flex items-center space-x-1 text-sm', className)} aria-label="面包屑导航">
+      <div className="flex items-center">
+        <Link
+          href="/"
+          className="text-gray-500 hover:text-brand-blue-600 transition-colors flex items-center"
+          aria-label="首页"
+        >
+          <Home className="h-4 w-4" />
+        </Link>
+      </div>
+
+      {items.map((item, index) => (
+        <div key={index} className="flex items-center">
+          <ChevronRight className="h-4 w-4 text-gray-400 mx-1 flex-shrink-0" />
+          {item.href ? (
+            <Link href={item.href} className="text-gray-500 hover:text-brand-blue-600 transition-colors line-clamp-1">
+              {item.label}
+            </Link>
+          ) : (
+            <span className="text-gray-900 font-medium line-clamp-1">{item.label}</span>
+          )}
+        </div>
+      ))}
+    </nav>
+  );
 }
 
 export {
